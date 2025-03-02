@@ -1,4 +1,9 @@
-### 14.2.2025
+### 2.03.2025
+```diff
++ WindowLabel Richtext (Html)
+```
+
+### 14.02.2025
 ```diff
 + Fixed AddValues and AddDisabledValues missing in certain Dropdowns
 + Fixed certain issues with Tooltips, Notifications and unloading (ty RectangularObject for the PR)
