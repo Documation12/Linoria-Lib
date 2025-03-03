@@ -43,43 +43,6 @@ local ThemeManager = {} do
 		['Default'] = { 1, httpService:JSONDecode('{"FontColor":"BFBFBF","MainColor":"171717","AccentColor":"8E25C6","BackgroundColor":"101010","OutlineColor":"0B0B0B"}') },
 	}
 
-	function ApplyBackgroundVideo(videoLink)
-		if
-			typeof(videoLink) ~= "string" or
-			not (getassetfunc and writefile and readfile and isfile) or
-			not (ThemeManager.Library and ThemeManager.Library.InnerVideoBackground)
-		then return; end;
-
-		--// Variables \\--
-		local videoInstance = ThemeManager.Library.InnerVideoBackground;
-		local extension = videoLink:match(".*/(.-)?") or videoLink:match(".*/(.-)$"); extension = tostring(extension);
-		local filename = string.sub(extension, 0, -6);
-		local _, domain = videoLink:match("^(https?://)([^/]+)"); domain = tostring(domain); -- _ is protocol
-
-		--// Check URL \\--
-		if videoLink == "" then
-			videoInstance:Pause();
-			videoInstance.Video = "";
-			videoInstance.Visible = false;
-			return
-		end
-		if #extension > 5 and string.sub(extension, -5) ~= ".webm" then return; end;
-
-		--// Fetch Video Data \\--
-		local videoFile = ThemeManager.Folder .. "/themes/" .. string.gsub(domain .. filename, 0, 249) .. ".webm";
-		if not isfile(videoFile) then
-			local success, requestRes = pcall(httprequest, { Url = videoLink, Method = 'GET' })
-			if not (success and typeof(requestRes) == "table" and typeof(requestRes.Body) == "string") then return; end;
-
-			writefile(videoFile, requestRes.Body)
-		end
-
-		--// Play Video \\--
-		videoInstance.Video = getassetfunc(videoFile);
-		videoInstance.Visible = true;
-		videoInstance:Play();
-	end
-
 	function ThemeManager:SetLibrary(library)
 		self.Library = library
 	end
@@ -286,7 +249,7 @@ local ThemeManager = {} do
 		groupbox:AddLabel('Accent color'):AddColorPicker('AccentColor', { Default = self.Library.AccentColor });
 		groupbox:AddLabel('Outline color'):AddColorPicker('OutlineColor', { Default = self.Library.OutlineColor });
 		groupbox:AddLabel('Font color')	:AddColorPicker('FontColor', { Default = self.Library.FontColor });
-		groupbox:AddInput('VideoLink', { Text = '.webm Video Background (Link)', Default = self.Library.VideoLink });
+		-- groupbox:AddInput('VideoLink', { Text = '.webm Video Background (Link)', Default = self.Library.VideoLink });
 		
 		local ThemesArray = {}
 		for Name, Theme in next, self.BuiltInThemes do
